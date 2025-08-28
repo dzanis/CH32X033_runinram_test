@@ -59,7 +59,7 @@ int main(void)
     USART_Printf_Init(115200);
     printf("SystemClk:%d\r\n", SystemCoreClock);
     printf( "ChipID:%08x\r\n", DBGMCU_GetCHIPID() );
-    printf("GPIO Toggle TEST\r\n");
+    printf("Run in ram test\r\n");
     GPIO_Toggle_INIT();
 
     while(1)
