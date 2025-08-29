@@ -43,6 +43,7 @@ void GPIO_Toggle_INIT(void)
     GPIO_Init(GPIOA, &GPIO_InitStructure);
 }
 
+__attribute__((section(".highcode")))
 void GPIO_Toggle(void)
 {
     for (;;) {
@@ -51,6 +52,7 @@ void GPIO_Toggle(void)
     }
 }
 
+__attribute__((section(".highcode")))
 void GPIO_Toggle_STL (void)
 {
     for (;;) {
