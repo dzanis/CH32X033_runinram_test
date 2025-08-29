@@ -13,7 +13,7 @@
 /*
  *@Note
  *GPIO routine:
- *PA0 push-pull output.
+ *PA4 push-pull output.
  *
  ***Only PA0--PA15 and PC16--PC17 support input pull-down.
  */
@@ -21,13 +21,14 @@
 #include "debug.h"
 
 /* Global define */
+#define PIN 4
 
 /* Global Variable */
 
 /*********************************************************************
  * @fn      GPIO_Toggle_INIT
  *
- * @brief   Initializes GPIOA.0
+ * @brief   Initializes GPIOA.4
  *
  * @return  none
  */
@@ -36,10 +37,26 @@ void GPIO_Toggle_INIT(void)
     GPIO_InitTypeDef GPIO_InitStructure = {0};
 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init(GPIOA, &GPIO_InitStructure);
+}
+
+void GPIO_Toggle(void)
+{
+    for (;;) {
+        GPIOA->BSHR = 1 << PIN; // set
+        GPIOA->BCR = 1 << PIN; // reset
+    }
+}
+
+void GPIO_Toggle_STL (void)
+{
+    for (;;) {
+        GPIO_SetBits (GPIOA, GPIO_Pin_4);
+        GPIO_ResetBits (GPIOA, GPIO_Pin_4);
+    }
 }
 
 /*********************************************************************
@@ -51,7 +68,6 @@ void GPIO_Toggle_INIT(void)
  */
 int main(void)
 {
-    u8 i = 0;
 
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
     SystemCoreClockUpdate();
@@ -59,12 +75,12 @@ int main(void)
     USART_Printf_Init(115200);
     printf("SystemClk:%d\r\n", SystemCoreClock);
     printf( "ChipID:%08x\r\n", DBGMCU_GetCHIPID() );
-    printf("Run in ram test\r\n");
+    printf("Run in ram TEST\r\n");
     GPIO_Toggle_INIT();
-
+    GPIO_Toggle();
+    //GPIO_Toggle_STL();
     while(1)
     {
-        Delay_Ms(500);
-        GPIO_WriteBit(GPIOA, GPIO_Pin_0, (i == 0) ? (i = Bit_SET) : (i = Bit_RESET));
+        
     }
 }
